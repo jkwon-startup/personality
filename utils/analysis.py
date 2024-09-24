@@ -92,3 +92,33 @@ def analyze_personality(zodiac_sign, blood_type, mbti):
         return analysis
     except Exception as e:
         raise Exception(f"성격 분석 중 오류 발생: {str(e)}")
+
+def generate_combined_analysis(zodiac_sign, blood_type, mbti, combined_traits):
+    analysis = f"{zodiac_sign}, {blood_type}형, 그리고 {mbti} 성격 유형의 특성이 복합적으로 나타나는 당신은 "
+    
+    trait_categories = {
+        "창의성": ["창의적", "혁신적", "독창적"],
+        "책임감": ["책임감", "신뢰", "성실"],
+        "감성": ["감성적", "공감", "이해심"],
+        "논리성": ["논리적", "분석적", "전략적"],
+        "사교성": ["사교적", "외향적", "친화력"],
+        "독립성": ["독립적", "자립적", "자족적"]
+    }
+    
+    identified_traits = []
+    for category, keywords in trait_categories.items():
+        if any(keyword in trait.lower() for trait in combined_traits for keyword in keywords):
+            identified_traits.append(category)
+    
+    if identified_traits:
+        analysis += ", ".join(identified_traits[:-1])
+        if len(identified_traits) > 1:
+            analysis += f" 그리고 {identified_traits[-1]}"
+        elif len(identified_traits) == 1:
+            analysis += identified_traits[0]
+        analysis += "의 특성을 가지고 있습니다. "
+    
+    analysis += "이러한 특성들이 조화롭게 어우러져 당신만의 독특한 성격을 형성하고 있습니다. "
+    analysis += f"{zodiac_sign}의 {random.choice(combined_traits)}, {blood_type}형의 {random.choice(combined_traits)}, 그리고 {mbti}의 {random.choice(combined_traits)} 특성이 특히 두드러집니다."
+    
+    return analysis

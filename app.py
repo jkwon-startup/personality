@@ -1,5 +1,5 @@
 import streamlit as st
-from utils.analysis import analyze_personality, get_zodiac_sign
+from utils.analysis import analyze_personality, get_zodiac_sign, generate_combined_analysis
 
 def main():
     # 페이지 설정
@@ -62,7 +62,11 @@ def display_analysis_result(zodiac_sign, blood_type, mbti, analysis_result):
             for trait in traits:
                 st.write(f"🔹 {trait}")
     
-    st.header("🌈 종합 분석 및 조언")
+    st.header("🌈 종합 의견")
+    combined_traits = analysis_result['combined']
+    st.write(generate_combined_analysis(zodiac_sign, blood_type, mbti, combined_traits))
+    
+    st.header("💡 개인화된 조언")
     for advice in analysis_result['advice']:
         st.write(f"🌟 {advice}")
 
