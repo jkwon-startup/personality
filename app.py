@@ -15,7 +15,12 @@ def main():
 
     with col1:
         birth_month = st.selectbox("태어난 월", range(1, 13))
-        days_in_month = (datetime(2000, birth_month % 12 + 1, 1) - datetime(2000, birth_month, 1)).days
+        try:
+            # 다음 달의 1일을 기준으로 이번 달의 일수를 계산
+            next_month = birth_month % 12 + 1
+            days_in_month = (datetime(2000, next_month, 1) - datetime(2000, birth_month, 1)).days
+        except ValueError:
+            days_in_month = 31  # 기본값 설정
         birth_day = st.selectbox("태어난 일", range(1, days_in_month + 1))
 
     with col2:
@@ -25,11 +30,14 @@ def main():
         mbti = st.selectbox("MBTI", ["ISTJ", "ISFJ", "INFJ", "INTJ", "ISTP", "ISFP", "INFP", "INTP", 
                                      "ESTP", "ESFP", "ENFP", "ENTP", "ESTJ", "ESFJ", "ENFJ", "ENTJ"])
 
+    # 디버깅을 위한 변수 출력
+    st.write(f"선택된 MBTI: {mbti}")
+
     # 분석 버튼
     if st.button("성격 분석하기"):
         try:
             zodiac_sign = get_zodiac_sign(birth_month, birth_day)
-            if zodiac_sign == "별자리를 찾을 수 없습니다":
+            if zodiac_sign == "별자리를 찾을 수 없습니다" or zodiac_sign == "유효하지 않은 날짜":
                 st.error("올바른 생년월일을 입력해주세요.")
             else:
                 analysis_result = analyze_personality(zodiac_sign, blood_type, mbti)
@@ -51,13 +59,19 @@ def display_analysis_result(zodiac_sign, blood_type, mbti, analysis_result):
     
     with col1:
         st.subheader(f"🌠 {zodiac_sign} 특성")
-        for trait in analysis_result['zodiac']:
-            st.write(f"✨ {trait}")
-    
+        if analysis_result['zodiac']:
+            for trait in analysis_result['zodiac']:
+                st.write(f"✨ {trait}")
+        else:
+            st.write("특성이 없습니다.")
+
     with col2:
         st.subheader(f"🩸 {blood_type}형 특성")
-        for trait in analysis_result['blood_type']:
-            st.write(f"💉 {trait}")
+        if analysis_result['blood_type']:
+            for trait in analysis_result['blood_type']:
+                st.write(f"💉 {trait}")
+        else:
+            st.write("특성이 없습니다.")
     
     with col3:
         st.subheader(f"🧠 {mbti} 특성")
@@ -70,8 +84,11 @@ def display_analysis_result(zodiac_sign, blood_type, mbti, analysis_result):
             st.write("MBTI 정보를 찾을 수 없습니다.")
     
     st.header("🌈 종합 분석 및 조언")
-    for advice in analysis_result['advice']:
-        st.write(f"🌟 {advice}")
+    if analysis_result['advice']:
+        for advice in analysis_result['advice']:
+            st.write(f"🌟 {advice}")
+    else:
+        st.write("조언이 없습니다.")
 
 def display_additional_info():
     with st.expander("성격 유형에 대해 더 알아보기"):
