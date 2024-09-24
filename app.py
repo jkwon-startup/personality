@@ -27,22 +27,21 @@ def main():
         blood_type = st.selectbox("혈액형", ["A", "B", "O", "AB"])
 
     with col3:
-    mbti = st.selectbox("MBTI", [
-        "ISTJ", "ISFJ", "INFJ", "INTJ", 
-        "ISTP", "ISFP", "INFP", "INTP", 
-        "ESTP", "ESFP", "ENFP", "ENTP", 
-        "ESTJ", "ESFJ", "ENFJ", "ENTJ"
-    ])
+        mbti = st.selectbox("MBTI", [
+            "ISTJ", "ISFJ", "INFJ", "INTJ",
+            "ISTP", "ISFP", "INFP", "INTP",
+            "ESTP", "ESFP", "ENFP", "ENTP",
+            "ESTJ", "ESFJ", "ENFJ", "ENTJ"
+        ])
 
-    
-    # 디버깅을 위한 출력
+    # 디버깅을 위한 변수 출력
     st.write(f"선택된 MBTI: {mbti}")
 
     # 분석 버튼
     if st.button("성격 분석하기"):
         try:
             zodiac_sign = get_zodiac_sign(birth_month, birth_day)
-            if zodiac_sign == "별자리를 찾을 수 없습니다" or zodiac_sign == "유효하지 않은 날짜":
+            if zodiac_sign in ["별자리를 찾을 수 없습니다", "유효하지 않은 날짜"]:
                 st.error("올바른 생년월일을 입력해주세요.")
             else:
                 analysis_result = analyze_personality(zodiac_sign, blood_type, mbti)
