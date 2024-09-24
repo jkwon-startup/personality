@@ -1,11 +1,6 @@
 import streamlit as st
+from datetime import datetime
 from utils.analysis import analyze_personality, get_zodiac_sign
-
-@st.cache_data
-def load_data():
-    # 여기에 필요한 데이터 로딩 로직을 추가할 수 있습니다.
-    # 현재는 utils/analysis.py에서 데이터를 로드하고 있으므로 이 함수는 비어 있습니다.
-    pass
 
 def main():
     # 페이지 설정
@@ -20,7 +15,8 @@ def main():
 
     with col1:
         birth_month = st.selectbox("태어난 월", range(1, 13))
-        birth_day = st.selectbox("태어난 일", range(1, 32))
+        days_in_month = (datetime(2000, birth_month % 12 + 1, 1) - datetime(2000, birth_month, 1)).days
+        birth_day = st.selectbox("태어난 일", range(1, days_in_month + 1))
 
     with col2:
         blood_type = st.selectbox("혈액형", ["A", "B", "O", "AB"])
@@ -33,9 +29,11 @@ def main():
     if st.button("성격 분석하기"):
         try:
             zodiac_sign = get_zodiac_sign(birth_month, birth_day)
-            analysis_result = analyze_personality(zodiac_sign, blood_type, mbti)
-            
-            display_analysis_result(zodiac_sign, blood_type, mbti, analysis_result)
+            if zodiac_sign == "별자리를 찾을 수 없습니다":
+                st.error("올바른 생년월일을 입력해주세요.")
+            else:
+                analysis_result = analyze_personality(zodiac_sign, blood_type, mbti)
+                display_analysis_result(zodiac_sign, blood_type, mbti, analysis_result)
         except Exception as e:
             st.error(f"분석 중 오류가 발생했습니다: {str(e)}")
 

@@ -22,17 +22,32 @@ def load_data():
 def get_zodiac_sign(month, day):
     """생일을 기반으로 별자리를 반환합니다."""
     zodiac_dates = [
-        (1, 20, "물병자리"), (2, 19, "물고기자리"), (3, 21, "양자리"),
-        (4, 20, "황소자리"), (5, 21, "쌍둥이자리"), (6, 21, "게자리"),
-        (7, 23, "사자자리"), (8, 23, "처녀자리"), (9, 23, "천칭자리"),
-        (10, 23, "전갈자리"), (11, 22, "사수자리"), (12, 22, "염소자리")
+        ((1, 20), (2, 18), "물병자리"),
+        ((2, 19), (3, 20), "물고기자리"),
+        ((3, 21), (4, 19), "양자리"),
+        ((4, 20), (5, 20), "황소자리"),
+        ((5, 21), (6, 20), "쌍둥이자리"),
+        ((6, 21), (7, 22), "게자리"),
+        ((7, 23), (8, 22), "사자자리"),
+        ((8, 23), (9, 22), "처녀자리"),
+        ((9, 23), (10, 22), "천칭자리"),
+        ((10, 23), (11, 21), "전갈자리"),
+        ((11, 22), (12, 21), "사수자리"),
+        ((12, 22), (12, 31), "염소자리"),
+        ((1, 1), (1, 19), "염소자리")
     ]
     
     date = datetime(2000, month, day)
-    for m, d, sign in zodiac_dates:
-        if date < datetime(2000, m, d):
+    for (start_month, start_day), (end_month, end_day), sign in zodiac_dates:
+        start_date = datetime(2000, start_month, start_day)
+        end_date = datetime(2000, end_month, end_day)
+        if start_date <= date <= end_date:
             return sign
-    return "염소자리"
+        if start_month == 12 and end_month == 12 and (date.month == 12 or date.month == 1):
+            if date >= datetime(2000, 12, start_day) or date <= datetime(2000, 1, end_day):
+                return sign
+    
+    return "별자리를 찾을 수 없습니다"
 
 def generate_advice(traits):
     """성격 특성을 기반으로 조언을 생성합니다."""
