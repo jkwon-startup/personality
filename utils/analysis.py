@@ -90,15 +90,14 @@ def analyze_personality(zodiac_sign, blood_type, mbti):
         
         # MBTI 데이터 처리
         if mbti in mbti_data:
-            analysis["mbti"] = mbti_data[mbti]
+            for category in ["심리적 특성", "직업적 특성", "대인관계", "연애 관계"]:
+                if category in mbti_data[mbti]:
+                    analysis["mbti"][category] = mbti_data[mbti][category]
         else:
             analysis["mbti"] = {"심리적 특성": ["MBTI 정보를 찾을 수 없습니다."]}
         
         all_traits = (analysis["zodiac"] + analysis["blood_type"] + 
-                      analysis["mbti"].get("심리적 특성", []) + 
-                      analysis["mbti"].get("대인관계", []) + 
-                      analysis["mbti"].get("직업적 특성", []) + 
-                      analysis["mbti"].get("연애 관계", []))
+                      [trait for traits in analysis["mbti"].values() for trait in traits])
         combined = list(set(all_traits))  # 중복 제거
         
         analysis["combined"] = combined

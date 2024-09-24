@@ -22,9 +22,14 @@ def main():
         blood_type = st.selectbox("혈액형", ["A", "B", "O", "AB"])
 
     with col3:
-        mbti = st.selectbox("MBTI", ["ISTJ", "ISFJ", "INFJ", "INTJ", "ISTP", "ISFP", "INFP", "INTP", 
-                                     "ESTP", "ESFP", "ENFP", "ENTP", "ESTJ", "ESFJ", "ENFJ", "ENTJ"])
-
+        st.subheader(f"🧠 {mbti} 특성")
+        if analysis_result['mbti']:
+            for category, traits in analysis_result['mbti'].items():
+                st.write(f"📊 {category}:")
+                for trait in traits:
+                    st.write(f"🔹 {trait}")
+        else:
+            st.write("MBTI 정보를 찾을 수 없습니다.")
     # 분석 버튼
     if st.button("성격 분석하기"):
         try:
