@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 import os
 import random
+import streamlit as st  # Streamlit을 사용하여 디버깅 메시지를 출력
 
 def load_data():
     """JSON 파일들에서 데이터를 로드합니다."""
@@ -28,11 +29,15 @@ def get_zodiac_sign(month, day):
         (10, 23, "전갈자리"), (11, 22, "사수자리"), (12, 22, "염소자리")
     ]
     
-    date = datetime(2000, month, day)
+    try:
+        date = datetime(2000, month, day)
+    except ValueError:
+        return "유효하지 않은 날짜"
+    
     for m, d, sign in zodiac_dates:
         if date < datetime(2000, m, d):
             return sign
-    return "물병자리"
+    return "염소자리"
 
 def generate_advice(traits):
     """성격 특성을 기반으로 조언을 생성합니다."""
