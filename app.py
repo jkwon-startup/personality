@@ -1,5 +1,5 @@
 import streamlit as st
-from utils.analysis import analyze_personality, get_zodiac_sign, generate_combined_analysis
+from utils.analysis import analyze_personality, generate_combined_analysis
 
 def main():
     # 페이지 설정
@@ -7,28 +7,31 @@ def main():
 
     # 제목
     st.title("🌟 귀여운 성격 분석기 🌟")
-    st.write("생년월일, 혈액형, MBTI를 입력하여 귀여운 성격 분석을 받아보세요!")
+    st.write("별자리, 혈액형, MBTI를 선택하여 귀여운 성격 분석을 받아보세요!")
 
     # 사용자 입력
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        birth_month = st.selectbox("태어난 월", range(1, 13))
-        birth_day = st.selectbox("태어난 일", range(1, 32))
+        zodiac_sign = st.selectbox("별자리", [
+            "양자리", "황소자리", "쌍둥이자리", "게자리", 
+            "사자자리", "처녀자리", "천칭자리", "전갈자리", 
+            "사수자리", "염소자리", "물병자리", "물고기자리"
+        ])
 
     with col2:
         blood_type = st.selectbox("혈액형", ["A", "B", "O", "AB"])
 
     with col3:
-        mbti = st.selectbox("MBTI", ["ISTJ", "ISFJ", "INFJ", "INTJ", "ISTP", "ISFP", "INFP", "INTP", 
-                                     "ESTP", "ESFP", "ENFP", "ENTP", "ESTJ", "ESFJ", "ENFJ", "ENTJ"])
+        mbti = st.selectbox("MBTI", [
+            "ISTJ", "ISFJ", "INFJ", "INTJ", "ISTP", "ISFP", "INFP", "INTP", 
+            "ESTP", "ESFP", "ENFP", "ENTP", "ESTJ", "ESFJ", "ENFJ", "ENTJ"
+        ])
 
     # 분석 버튼
     if st.button("성격 분석하기"):
         try:
-            zodiac_sign = get_zodiac_sign(birth_month, birth_day)
             analysis_result = analyze_personality(zodiac_sign, blood_type, mbti)
-            
             display_analysis_result(zodiac_sign, blood_type, mbti, analysis_result)
         except Exception as e:
             st.error(f"분석 중 오류가 발생했습니다: {str(e)}")
